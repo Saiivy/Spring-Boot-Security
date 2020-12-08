@@ -11,7 +11,7 @@ xmlns:sec ="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"><head>
 <textarea rows="4" cols="50" th:field="*{text}"></textarea>
 <p th:if="${#fields.hasErrors('text')}" th:errors="*{text}">
 </p>
-<p th:value="${bookId}" th:field="*{bookId}"> </p>
+ <input type="text" th:field="*{bookId}">
 <input type="submit" value="Add">
 </form>
 <div sec:authorize="isAuthenticated()">
