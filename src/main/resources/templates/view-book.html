@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+xmlns:sec ="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"><head>
+<meta charset="ISO-8859-1">
+<title>View Reviews</title>
+</head>
+<body>
+<h5> Review for:</h5>
+<div th:text="${bookName}"></div>
+<table>
+
+<tr th:each="review: ${reviewList}">
+<td th:text= "${review.text}"></td>
+
+
+</table>
+<div sec:authorize="!isAuthenticated()">
+
+<a href="#" th:href="@{/loginForm}">Login In to Post a Review </a>
+
+</div>
+
+<div sec:authorize="isAuthenticated()">
+<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
+
+<a href="#" th:href="@{/user/post-review/}+${id}">Add Reviews</a>
+</div>
+</div>
+
+<div sec:authorize="isAuthenticated()">
+<form action="#" th:action="@{/logout}">
+<input type="submit" value="logout">
+</form>
+</div>
+</body>
+</html>

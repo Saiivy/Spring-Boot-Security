@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/"
+xmlns:sec ="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+<meta charset="ISO-8859-1">
+<title>Database Login</title>
+</head>
+<body>
+<div th:if= "${param.error}">
+Username or password Incorrect!
+Please try again
+</div>
+
+<form action="#" th:action="@{/login}" method="post">
+Username:<input type= "text" name="username">
+Password:<input type= "text" name = "password">
+<input type = Submit value ="Login" >
+</form>
+<div sec:authorize="isAuthenticated()">
+<form action="#" method="post" th:action="@{/logout}">
+<input type="submit" value="logout">
+</form>
+</div>
+</body>
+</html>
