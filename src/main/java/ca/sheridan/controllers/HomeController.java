@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -140,8 +139,9 @@ public class HomeController {
 	@GetMapping("/user/post-review/{id}")
 	public String addReview(Model model,@PathVariable long id) {
 		model.addAttribute("review",new Review());
-		model.addAttribute("id",id);
-		System.out.println(id);
+		long bookId = id;
+		model.addAttribute("bookId",bookId);
+		System.out.println(bookId);
 		return "/user/add-review";
 	}
 
@@ -151,7 +151,7 @@ public class HomeController {
 	 * @param review
 	 * @return redirect to index page
 	 */
-	@RequestMapping("/user/process-review/{id}")
+	@RequestMapping("/user/process-review")
 	public String processReview(@Valid Review review,BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
 			return "/user/add-review";

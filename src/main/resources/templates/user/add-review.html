@@ -5,12 +5,13 @@ xmlns:sec ="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"><head>
 <title>Add Review</title>
 </head>
 <body>
-<form method="post" action="#" th:action="@{/user/process-review/${id}}" th:object="${review}" >
+<form method="post" action="#" th:action="@{/user/process-review}" th:object="${review}" >
 <label for="Review">Add You Review:</label>
 
 <textarea rows="4" cols="50" th:field="*{text}"></textarea>
 <p th:if="${#fields.hasErrors('text')}" th:errors="*{text}">
-</p><input type="hidden" th:value="${id}" th:field="*{bookId}">
+</p>
+<p th:value="${bookId}" th:field="*{bookId}"> </p>
 <input type="submit" value="Add">
 </form>
 <div sec:authorize="isAuthenticated()">
