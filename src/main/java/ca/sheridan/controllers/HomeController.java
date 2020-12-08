@@ -26,9 +26,8 @@ import ca.sheridan.database.DatabaseAccess;
 
 /**
  * 
- * @author gursimar 
- * Base class that controls all the actions one the frontend,
- * backend for the application
+ * @author gursimar Base class that controls all the actions one the frontend,
+ *         backend for the application
  *
  */
 @Controller
@@ -73,6 +72,7 @@ public class HomeController {
 
 	/**
 	 * validates fields and creates a new user in database
+	 * 
 	 * @param name
 	 * @param password Registers users and adds them to database
 	 * @return registration form
@@ -80,16 +80,21 @@ public class HomeController {
 
 	@PostMapping("/register")
 	public String RegistrationForm(@RequestParam(name = "username") String username,
-			@RequestParam(name = "password") String password, Model model) {
+			@RequestParam(name = "password") String password, Model model) throws Exception {
 
 		if (username.equals("") || username == null || password.equals("") || password == null) {
 			model.addAttribute("error", "Input both password and username inorder to register!");
 			return "register";
 		} else {
-			String encodedpassword = passwordEncoder.encode(password);
-			user = new User(username, encodedpassword, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
-			jdbcUserDetailsManager.createUser(user);
-			return "redirect:/";
+			try {
+				String encodedpassword = passwordEncoder.encode(password);
+				user = new User(username, encodedpassword, Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+				jdbcUserDetailsManager.createUser(user);
+				return "redirect:/";
+			} catch (Exception ex) {
+				model.addAttribute("error", "user already exists! Please Register using different username");
+				return "register";
+			}
 		}
 	}
 
@@ -98,7 +103,7 @@ public class HomeController {
 	 * @return login form
 	 */
 	@GetMapping("/loginForm")
-	public String returnLoginForm() {
+	public String returnLoginForm(Model model) {
 		return "login";
 	}
 
@@ -123,10 +128,10 @@ public class HomeController {
 	 * @return view-book page
 	 */
 
-	@GetMapping("/user/reviews/{id}")
-	public String getReviews(@PathVariable long id, Model model) {
-		model.addAttribute("id",id);
-		model.addAttribute("reviewList", database.getReviews(id));
+	@GetMapping("/viewReviews/{bookId}")
+	public String getReviews(@PathVariable long bookId, Model model) {
+		model.addAttribute("bookId", bookId);
+		model.addAttribute("reviewList", database.getReviews(bookId));
 		return "view-book";
 	}
 
@@ -136,11 +141,10 @@ public class HomeController {
 	 * @param model
 	 * @return add-review page
 	 */
-	@GetMapping("/user/post-review/{id}")
-	public String addReview(Model model,@PathVariable long id) {
-		model.addAttribute("review",new Review());
-		long bookId = id;
-		model.addAttribute("bookId",bookId);
+	@GetMapping("/user/post-review/{bookId}")
+	public String addReview(Model model, @PathVariable long bookId) {
+		model.addAttribute("review", new Review());
+		model.addAttribute("bookId", bookId);
 		System.out.println(bookId);
 		return "/user/add-review";
 	}
@@ -152,14 +156,13 @@ public class HomeController {
 	 * @return redirect to index page
 	 */
 	@RequestMapping("/user/process-review")
-	public String processReview(@Valid Review review,BindingResult bindingResult) {
-		if(bindingResult.hasErrors()) {
+	public String processReview(@Valid Review review, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
 			return "/user/add-review";
-		}
-		else {
-		database.addreview(review);
-		System.out.println(review);
-		return "redirect:/";
+		} else {
+			database.addreview(review);
+			System.out.println(review);
+			return "redirect:/";
 		}
 	}
 
@@ -177,20 +180,19 @@ public class HomeController {
 	}
 
 	/**
-	 * Checks if the input fields are correct
-	 * Adds book to database from input of admin
+	 * Checks if the input fields are correct Adds book to database from input of
+	 * admin
 	 * 
 	 * @param book
 	 * @return redirect to index
 	 */
 	@PostMapping("/admin/addBook")
-	public String addBook(@Valid Book book,BindingResult bindingResult,Model model) {
-		if(bindingResult.hasErrors()) {
+	public String addBook(@Valid Book book, BindingResult bindingResult, Model model) {
+		if (bindingResult.hasErrors()) {
 			return "/admin/add-book";
-		}
-		else {
-		database.addBook(book);
-		return "redirect:/";
+		} else {
+			database.addBook(book);
+			return "redirect:/";
 		}
 	}
 
