@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
 xmlns:sec ="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-
 <head>
 <meta charset="ISO-8859-1">
-<title>Database Login</title>
+<title>Database Register</title>
+<link rel="stylesheet" href="#" th:href="@{css/form.css}">
 </head>
 <body>
-<div th:if="${error}" th:text ="${error}"></div>
-
+<p class="error" th:text ="${error}"></p>
+<div class="container">
 <form action="#" th:action="@{/register}" method="post">
-Username:<input type= "text" name="username">
-Password:<input type= "text" name = "password">
-<input type = Submit value ="Login" >
+<label for="uname"><b>Username</b></label>
+<input type= "text" name="username">
+<br>
+<label for="psw"><b>Password</b></label>
+<input type= "text" name = "password">
+<br>
+<Button type = Submit>Register</Button>
 </form>
+</div>
 </body>
 </html>

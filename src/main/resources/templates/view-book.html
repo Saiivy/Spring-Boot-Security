@@ -1,36 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/"
-xmlns:sec ="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"><head>
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
 <meta charset="ISO-8859-1">
-<title>View Reviews</title>
+<title>View Book</title>
+<link rel="stylesheet" href="#" th:href="@{css/table.css}">
 </head>
 <body>
-<h5> Review for:</h5>
-<div th:text="${bookName}"></div>
-<table>
+<h5>Reviews:</h5>
+        <main>
+		<ul class="gradient-list" th:each="review: ${reviewList}">
+			<li th:text="${review.text}"></li>
+			</ul>
+			</main>
+	<br>
+	<div sec:authorize="!isAuthenticated()">
+		<a href="#" th:href="@{/loginForm}">Login In to Post a Review </a>
+	</div>
+	<br>
+	<div sec:authorize="isAuthenticated()">
+		<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
 
-<tr th:each="review: ${reviewList}">
-<td th:text= "${review.text}"></td>
-
-
-</table>
-<div sec:authorize="!isAuthenticated()">
-
-<a href="#" th:href="@{/loginForm}">Login In to Post a Review </a>
-
-</div>
-
-<div sec:authorize="isAuthenticated()">
-<div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_USER')">
-
-<a href="#" th:href="@{/user/post-review/}+${id}">Add Reviews</a>
-</div>
-</div>
-
-<div sec:authorize="isAuthenticated()">
-<form action="#" th:action="@{/logout}">
-<input type="submit" value="logout">
-</form>
-</div>
+			<a href="#" th:href="@{/user/post-review/}+${bookId}">Add Reviews</a>
+		</div>
+	</div>
+	<br>
+	<div sec:authorize="isAuthenticated()">
+		<form action="#" th:action="@{/logout}">
+			<input type="submit" value="logout">
+		</form>
+	</div>
 </body>
 </html>

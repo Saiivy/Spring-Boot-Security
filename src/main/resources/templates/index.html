@@ -1,50 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org/"
-xmlns:sec ="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
 <meta charset="ISO-8859-1">
 <title>Library Database</title>
+<link rel="stylesheet" href="#" th:href="@{css/table.css}">
 </head>
 <body>
-<div th:if="${bookList.empty}"> 
-<h5> No books added by Admin!</h5> 
-</div>
-<div th:unless="${bookList.empty}">
-<table>
-<tr>
-<th>Book Title</th>
-<th>Author</th>
-<th>Reviews</th>
-</tr>
-<tr th:each="book: ${bookList}">
+	<div th:if="${bookList.empty}">
+		<h5>No books added by Admin!</h5>
+	</div>
+	<div th:unless="${bookList.empty}">
+		<table id="books">
+			<tr>
+				<th>Book Title</th>
+				<th>Author</th>
+				<th>Reviews</th>
+			</tr>
+			<tr th:each="book: ${bookList}">
 
-<td th:text= "${book.title}"></td>
-<td th:text= "${book.author}"></td>
-<td><a href="#" th:href="@{user/reviews/}+${book.id}">View</a></td>
-</table>
-</div>
-<div sec:authorize="!isAuthenticated()">
+				<td th:text="${book.title}"></td>
+				<td th:text="${book.author}"></td>
+				<td><a href="#" th:href="@{viewReviews/}+${book.id}">View</a></td>
+		</table>
+	</div>
+	<br>
+	<br>
+	<div class="login" sec:authorize="!isAuthenticated()">
+		<a href="#" th:href="@{/loginForm}"> Login </a>
+	</div>
+	<br>
+	<br>
+	<div class="add-book" sec:authorize="hasRole('ROLE_ADMIN')">
+		<a href="#" th:href="@{/admin/add-book}">ADD-BOOK</a>
+	</div>
+	<br>
+	<br>
+	<div class="logout" sec:authorize="isAuthenticated()">
+		<form action="#" method="post" th:action="@{/logout}">
+			<input type="submit" value="logout">
+		</form>
+	</div>
+	<br>
+	<br>
+	<div sec:authorize="!isAuthenticated()">
+		<a href="#" th:href="@{/registerForm}"> Register </a>
+	</div>
+	<div th:if="${param.logout}">You are now logged out!</div>
 
-<a href="#" th:href= "@{/loginForm}"> Login </a>
-</div>
-
-
-<div sec:authorize="hasRole('ROLE_ADMIN')">
-<a href="#" th:href="@{/admin/add-book}">ADD-BOOK</a>
-
-</div>
-
-<div sec:authorize="isAuthenticated()">
-<form action="#" method="post" th:action="@{/logout}">
-<input type="submit" value="logout">
-</form>
-</div>
-<div sec:authorize="!isAuthenticated()">
-<a href="#" th:href= "@{/registerForm}"> Register </a>
-
-</div>
-<div th:if= "${param.logout}">
-You are now logged out!
-</div>
 </body>
 </html>
